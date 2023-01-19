@@ -16,4 +16,9 @@ class Subject extends Model
     protected $fillable = [
         'subject',
     ];
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
 }

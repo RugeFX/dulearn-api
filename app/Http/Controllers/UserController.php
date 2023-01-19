@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
 use Throwable;
 
 class UserController extends Controller
@@ -22,7 +23,7 @@ class UserController extends Controller
     public function index()
     {
         // Ambil semua user
-        $user = User::all();
+        $user = User::with(['registeredUser', 'level'])->get();
         if(!$user || $user->isEmpty()){
             return new ResponseResource('Failed', 'No Data Found', null);
         }
@@ -40,10 +41,7 @@ class UserController extends Controller
         // Membuat Validator dengn rules
         $validate = Validator::make($request->all(), [
             "reg_num" => 'required',
-            'name' => 'required',
-            'password' => 'required',
-            'level_id' => 'required',
-            'created_at'
+            'password' => ['required', Password::min(8)->numbers()],
         ]);
 
         // Cek Validasi
@@ -65,13 +63,12 @@ class UserController extends Controller
         $userSave = new User;
         $userSave->reg_num = $request->reg_num;
         $userSave->profile_picture = 'default.png';
-        $userSave->name = $request->name;
         $userSave->password = Hash::make($request->password);
-        $userSave->level_id = $request->level_id;
+        $userSave->level_id = 1;
         $userSave->created_at = date('Y-m-d');
         try{
             $userSave->saveOrFail();
-            return new ResponseResource('Success', 'Successfully inserted data!', $userSave->all());
+            return new ResponseResource('Success', 'Successfully inserted data!', $userSave);
         }catch(Throwable $err){
             return new ResponseResource('Failed', 'Error on inserting data', $err->getMessage());
         }
@@ -114,5 +111,25 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+        $user = User::query()->where('id', $id)->first();
+        $regNum = $user->reg_num;
+        if(!$user->delete()){
+            return new ResponseResource('Failed', 'Error Deleting User', null);
+        }
+        $updateReg = RegisteredUser::query()->where('reg_num', '=', $regNum)->first()->update(['is_used' => 0]);
+        if(!$updateReg){
+            return new ResponseResource('Failed', 'Error Updating Registered User', null);
+        }
+        return new ResponseResource('Success', 'Successfully Deleted User!', null);
+    }
+
+    public function checkPw()
+    {
+        $user = User::find(2);
+        $hashCheck = Hash::check("zacky123", $user->password);
+        if(!$hashCheck){
+            return "Failed auth";
+        }
+        return $hashCheck;
     }
 }

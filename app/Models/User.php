@@ -14,26 +14,45 @@ class User extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'reg_num', 'profile_picture', 'name', 'password', 'level_id', 'created_at',
+        'reg_num', 'profile_picture', 'password', 'level_id', 'created_at',
     ];
+
+    public function registeredUser(){
+        return $this->belongsTo(RegisteredUser::class, "reg_num", "reg_num");
+    }
 
     public function level()
     {
-        return $this->hasOne('App\Models\Level');
+        return $this->belongsTo(Level::class);
     }
 
     public function materials()
     {
-        return $this->hasMany('App\Models\Material');
+        return $this->hasMany(Material::class);
     }
 
     public function posts()
     {
-        return $this->hasMany('App\Models\Post');
+        return $this->hasMany(Post::class);
     }
 
     public function replies()
     {
-        return $this->hasMany('App\Models\Reply');
+        return $this->hasMany(Reply::class);
+    }
+
+    public static function boot(){
+        parent::boot();
+        self::deleting(function($user) {
+            $user->materials->each(function($material) {
+                $material->delete();
+            });
+            $user->posts->each(function($post) {
+                $post->delete();
+            });
+            $user->replies->each(function($reply) {
+                $reply->delete();
+            });
+        });
     }
 }

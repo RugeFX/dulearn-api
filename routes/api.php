@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,4 +19,5 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::apiResource('users', 'App\Http\Controllers\UserController');
+Route::apiResource('users', UserController::class);
+Route::get('checkpw', [UserController::class, 'checkPw']);

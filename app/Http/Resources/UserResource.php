@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends JsonResource
 {
@@ -16,10 +17,9 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'reg_num' => $this->reg_num,
+            'password' => $this->password,
+            'identity' => $this->registeredUser,
             'level' => $this->level,
-            'name' => $this->name,
-            'level_id' => $this->level_id,
             'created_at' => $this->created_at,
         ];
     }
