@@ -14,8 +14,13 @@ class Material extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'subject_id', 'user_id', 'title', 'material', 'created_at',
+        'class_id', 'subject_id', 'user_id', 'title', 'material', 'created_at',
     ];
+
+    public function kelas()
+    {
+        return $this->hasOne("App\Models\Kelas");
+    }
 
     public function subject(){
         return $this->hasOne("App\Models\Subject");

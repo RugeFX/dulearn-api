@@ -14,7 +14,7 @@ class Reply extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'post_id', 'user_id', 'post', 'created_at',
+        'post_id', 'user_id', 'reply', 'created_at',
     ];
 
     public function post()

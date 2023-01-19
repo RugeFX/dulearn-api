@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PostResource;
+use App\Http\Resources\ResponseResource;
 use App\Http\Resources\UserResource;
 use App\Models\Level;
-use App\Models\RegisId;
+use App\Models\RegisteredUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -23,10 +23,10 @@ class UserController extends Controller
     {
         // Ambil semua user
         $user = User::all();
-        if(!$user){
-            return new PostResource('Failed', 'No Data Found', null);
+        if(!$user || $user->isEmpty()){
+            return new ResponseResource('Failed', 'No Data Found', null);
         }
-        return new PostResource('Success', 'User Data', $user);
+        return new ResponseResource('Success', 'User Data', $user);
     }
 
     /**
@@ -49,29 +49,31 @@ class UserController extends Controller
         // Cek Validasi
         if ($validate->fails()) {
             $errorMessages = $validate->messages()->all();
-            return new PostResource('Failed', 'Validation Error!', $errorMessages);
+            return new ResponseResource('Failed', 'Validation Error!', $errorMessages);
         }
 
-        // Cek User exists
-        $regCheck = RegisId::where('reg_num', '=', $request->reg_num)->first();
+        // Cek if registration ID exists
+        $regCheck = RegisteredUser::where('reg_num', '=', $request->reg_num)->first();
         if(!$regCheck){
-            return new PostResource('Failed', 'NISN/NIP not found!', null);
+            return new ResponseResource('Failed', 'NISN/NIP not found!', null);
         }
+        // Cek if registratin ID is used
         if($regCheck->is_used == 1){
-            return new PostResource('Failed', 'User already exists', null);
+            return new ResponseResource('Failed', 'User already exists', null);
         }
-
+        // Make a model and make a save transaction
         $userSave = new User;
         $userSave->reg_num = $request->reg_num;
+        $userSave->profile_picture = 'default.png';
         $userSave->name = $request->name;
         $userSave->password = Hash::make($request->password);
         $userSave->level_id = $request->level_id;
         $userSave->created_at = date('Y-m-d');
         try{
             $userSave->saveOrFail();
-            return new PostResource('Success', 'Successfully inserted data!', $userSave->all());
+            return new ResponseResource('Success', 'Successfully inserted data!', $userSave->all());
         }catch(Throwable $err){
-            return new PostResource('Failed', 'Error on inserting data', $err->getMessage());
+            return new ResponseResource('Failed', 'Error on inserting data', $err->getMessage());
         }
     }
 
@@ -86,9 +88,9 @@ class UserController extends Controller
         // Cari user berdasarkan ID
         $user = User::find($id);
         if(!$user){
-            return new PostResource('Failed', 'No Data Found', null);
+            return new ResponseResource('Failed', 'No Data Found', null);
         }
-        return new PostResource('Success', 'User Data', new UserResource($user));
+        return new ResponseResource('Success', 'User Data', new UserResource($user));
     }
 
     /**

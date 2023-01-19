@@ -14,12 +14,12 @@ class User extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'reg_num', 'level_id', 'name', 'password', 'created_at',
+        'reg_num', 'profile_picture', 'name', 'password', 'level_id', 'created_at',
     ];
 
     public function level()
     {
-        return $this->belongsTo('App\Models\Level');
+        return $this->hasOne('App\Models\Level');
     }
 
     public function materials()

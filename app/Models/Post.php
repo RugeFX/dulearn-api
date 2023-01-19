@@ -14,7 +14,7 @@ class Post extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id', 'material_id', 'title', 'description', 'created_at',
+        'user_id', 'material_id', 'title', 'body', 'created_at',
     ];
 
     public function user()
