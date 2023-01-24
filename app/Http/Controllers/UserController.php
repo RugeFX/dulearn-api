@@ -20,7 +20,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         // Ambil semua user
         $user = User::with(['registeredUser', 'level'])->get();
@@ -38,7 +38,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Membuat Validator dengn rules
+        // Cek autorisasi
+        if(!$request->user()->tokenCan("modify-data")){
+            return response()->json(new ResponseResource("Failed", 'Unauthorized', null), 401);
+        }
+
+        // Membuat Validator
         $validate = Validator::make($request->all(), [
             "reg_num" => 'required',
             'password' => ['required', Password::min(8)->numbers()],
