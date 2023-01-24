@@ -76,6 +76,8 @@ class AuthController extends Controller
     }
 
     public function logOutUser(Request $request){
-        $request->user();
+        $user = User::query()->where("id", "=", $request->user()->id)->first();
+        $user->tokens()->delete();
+        return response()->json(new ResponseResource("Success", "Logged Out Successfully!", null), 204);
     }
 }
