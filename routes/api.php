@@ -17,10 +17,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/react', function(){
-    return view('users');
-});
-
 Route::middleware('cors')->group(function () {
     Route::apiResource('users', UserController::class)->middleware("auth:sanctum");
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactDOM } from "react";
-import { createRoot } from "react-dom/client";
 
 const TestComp = () => {
     return (

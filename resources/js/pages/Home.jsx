@@ -1,7 +1,13 @@
-import "../../css/app.css";
-import React from "react";
-import { createRoot } from "react-dom/client";
-//Components
-import TestComp from "./../components/TestComp";
+import Navbar from "../components/Navbar";
+import MainHome from "../components/MainHome";
+import { Head } from "@inertiajs/react";
 
-createRoot(document.getElementById("root")).render(<TestComp />);
+export default function Home(props) {
+    return (
+        <>
+            <Head title="Homepage"></Head>
+            <Navbar />
+            <MainHome />
+        </>
+    );
+}
