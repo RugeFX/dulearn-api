@@ -17,13 +17,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('users', UserController::class)->middleware("auth:sanctum");
+Route::get('/react', function(){
+    return view('users');
+});
 
-Route::prefix('auth')->group(function () {
-    Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
+Route::middleware('cors')->group(function () {
+    Route::apiResource('users', UserController::class)->middleware("auth:sanctum");
+
+    Route::prefix('auth')->group(function () {
+        Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+            return $request->user();
+        });
+        Route::post("/register", [AuthController::class, 'registerUser']);
+        Route::post("/login", [AuthController::class, 'loginUser']);
+        Route::middleware('auth:sanctum')->get("/logout", [AuthController::class, 'logOutUser']);
     });
-    Route::post("/register", [AuthController::class, 'registerUser']);
-    Route::post("/login", [AuthController::class, 'loginUser']);
-    Route::get("/logout", [AuthController::class, 'logOutUser']);
 });
