@@ -1,6 +1,7 @@
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import logo from "./../../../public/img/logo.png";
 import bg from "./../../../public/img/login-bg.png";
+import { InertiaLink } from "@inertiajs/inertia-react";
 
 export default function Login(props) {
     return (
@@ -14,28 +15,30 @@ export default function Login(props) {
                     backgroundPosition: "center",
                 }}
             >
-                <div className="h-3/5 w-2/5 min-w-[25rem] min-h-[25rem] bg-[#060D47] rounded-[123px] shadow-cum flex flex-col justify-center items-center gap-10 p-10">
+                <div className="min-w-[25rem] min-h-[15rem] md:min-h-[25rem] lg:min-w-[40rem] lg:min-h-[30rem] bg-[#060D47] rounded-[70px] shadow-cum flex flex-col justify-center items-center gap-2 lg:gap-5 p-10">
                     <img src={logo} alt="Logo DuLearn" className="w-64" />
-                    <span className="text-white text-lg">Log In</span>
                     <div className="flex flex-col gap-5">
                         <input
                             type="text"
                             name="nisn"
                             id="nisn"
                             placeholder="Masukkan NISN"
-                            className="bg-[#464A83] p-3 rounded-2xl w-[25rem]"
+                            className="bg-[#464A83] p-3 rounded-lg w-[25rem] text-white focus:outline focus:outline-2 outline-[#FAA41A] transition-all"
                         />
                         <input
                             type="password"
                             name="pass"
                             id="pass"
                             placeholder="Masukkan Password"
-                            className="bg-[#464A83] p-3 rounded-2xl"
+                            className="bg-[#464A83] p-3 rounded-lg text-white focus:outline focus:outline-2 outline-[#FAA41A] transition-all"
                         />
                     </div>
-                    <button className="text-lg font-bold bg-[#FAA41A] rounded-3xl px-10 py-2">
+                    <a
+                        href="/aa"
+                        className="text-lg font-bold text-white bg-[#FAA41A] rounded-lg px-10 py-2 hover:bg-[#a76e14] transition-all focus:outline focus:outline-2 outline-white"
+                    >
                         Log In
-                    </button>
+                    </a>
                 </div>
             </div>
         </>

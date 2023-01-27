@@ -11,3 +11,7 @@ POST http://192.168.137.1:8000/api/auth/login
 ###
 
 POST http://192.168.137.1:8000/api/auth/register
+
+###
+
+GET http://127.0.0.1:8000/api/materials
