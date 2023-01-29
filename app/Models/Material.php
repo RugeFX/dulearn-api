@@ -19,11 +19,11 @@ class Material extends Model
 
     public function kelas()
     {
-        return $this->hasOne("App\Models\Kelas");
+        return $this->hasOne("App\Models\Kelas", 'id', 'class_id');
     }
 
     public function subject(){
-        return $this->hasOne("App\Models\Subject");
+        return $this->hasOne("App\Models\Subject", 'id', 'subject_id');
     }
 
     public function user(){

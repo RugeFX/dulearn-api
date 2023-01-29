@@ -29,7 +29,7 @@ class AuthController extends Controller
         }
 
         if(!Auth::attempt($request->only("reg_num", "password"))){
-            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", null), 401);
+            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["Invalid Login Details!"]), 401);
         }
 
         $user = User::query()->where("reg_num", '=', $request->reg_num)->first();
@@ -76,10 +76,11 @@ class AuthController extends Controller
     }
 
     public function logOutUser(Request $request){
-        $user = $request->user()->tokens()->delete();
+        $user = $request->user();
         if(!$user){
-            return response()->json(new ResponseResource("Failed", "Log Out Failed!", null), 400);
+            return response()->json(new ResponseResource("Failed", "You Are Not Authenticated Yet / Invalid Token", null), 400);
         }
+        $user->tokens()->delete();
         return response()->json(new ResponseResource("Success", "Logged Out Successfully!", null), 200);
     }
 }

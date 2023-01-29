@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MaterialResource;
 use App\Http\Resources\ResponseResource;
 use App\Models\Material;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
+use Throwable;
 
 class MaterialController extends Controller
 {
@@ -28,7 +32,40 @@ class MaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Cek autorisasi
+        if(!$request->user()->tokenCan("modify-data")){
+            return response()->json(new ResponseResource("Failed", 'Unauthorized', null), 401);
+        }
+
+        // Membuat Validator
+        $validate = Validator::make($request->all(), [
+            'class_id' => 'required|unique:App\Models\Class,id',
+            'subject_id' => 'required|unique:App\Models\Subject,id',
+            'title' => 'required', 
+            'material' => 'required',
+        ]);
+
+        // Cek Validasi
+        if ($validate->fails()) {
+            $errorMessages = $validate->messages()->all();
+            return new ResponseResource('Failed', 'Validation Error!', $errorMessages);
+        }
+
+        // Make a model and make a save transaction
+        $matSave = new Material();
+        $matSave->class_id = $request->class_id;
+        $matSave->subject_id = $request->subject_id;
+        $matSave->user_id = $request->user()->id;
+        $matSave->title = $request->title;
+        $matSave->material = $request->material;
+        $matSave->created_at = date('Y-m-d');
+        
+        try{
+            $matSave->saveOrFail();
+            return new ResponseResource('Success', 'Successfully inserted data!', $matSave);
+        }catch(Throwable $err){
+            return new ResponseResource('Failed', 'Error on inserting data', $err->getMessage());
+        }
     }
 
     /**
@@ -39,7 +76,12 @@ class MaterialController extends Controller
      */
     public function show($id)
     {
-        //
+        // Cari materi berdasarkan ID
+        $mat = Material::find($id);
+        if(!$mat){
+            return new ResponseResource('Failed', 'No Data Found', null);
+        }
+        return new ResponseResource('Success', 'Material Data', new MaterialResource($mat));
     }
 
     /**

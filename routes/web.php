@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WebAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,10 +17,13 @@ use Inertia\Inertia;
 |
 */
 
-Route::get("/login", function() {
+Route::middleware('guest')->get("/login", function() {
     return Inertia::render("Login");
 })->name("login");
 
-Route::middleware(["auth:sanctum"])->get('/', function () {
+Route::middleware('guest')->post('/login', [WebAuthController::class, 'logIn']);
+Route::get('/logout', [WebAuthController::class, 'logOut']);
+
+Route::middleware("auth")->get('/home', function () {
     return Inertia::render("Home");
 });

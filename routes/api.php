@@ -22,13 +22,13 @@ Route::middleware('cors')->group(function () {
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('users', UserController::class);
         Route::apiResource('materials', MaterialController::class);
-        Route::get("/logout", [AuthController::class, 'logOutUser']);
     });
     Route::prefix('auth')->group(function () {
+        Route::post("/register", [AuthController::class, 'registerUser']);
+        Route::post("/login", [AuthController::class, 'loginUser']);
+        Route::get("/logout", [AuthController::class, 'logOutUser']);
         Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
             return $request->user();
         });
-        Route::post("/register", [AuthController::class, 'registerUser']);
-        Route::post("/login", [AuthController::class, 'loginUser']);
     });
 });
