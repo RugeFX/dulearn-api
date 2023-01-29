@@ -1,7 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import logo from "./../../../public/img/logoglow.png";
 import bg from "./../../../public/img/login-bg.png";
-import { FaUser, FaLock } from "react-icons/fa";
+import { FaUser, FaLock, FaCircleNotch } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -11,17 +11,23 @@ export default function Login(props) {
     const [nisn, setNisn] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const handleLogin = () => {
+        setLoading(true);
         axios
             .post("/login", { reg_num: nisn, password: password })
             .then((res) => {
+                setLoading(false);
                 console.log(res);
                 if (res.data.success === "Success!") {
-                    window.location.href = "/home";
+                    setTimeout(() => {
+                        window.location.href = "/home";
+                    }, 600);
                 }
             })
             .catch((err) => {
+                setLoading(false);
                 const errResponse = err.response.data;
                 setError(errResponse.data);
                 console.error(errResponse);
@@ -114,8 +120,14 @@ export default function Login(props) {
                     </div>
                     <button
                         onClick={handleLogin}
-                        className="text-lg font-bold text-[#1c215c] bg-[#FAA41A] hover:bg-[#b4740c] rounded-lg px-10 py-2 focus:outline-0 focus:shadow-input focus:shadow-white transition-all"
+                        className={`flex items-center gap-4 text-lg font-bold text-[#1c215c] bg-[#FAA41A] hover:bg-[#b4740c] rounded-lg px-5 py-2 focus:outline-0 focus:shadow-input focus:shadow-white transition-all hover:scale-110`}
                     >
+                        {loading && (
+                            <FaCircleNotch
+                                className="animate-spin"
+                                color="white"
+                            />
+                        )}
                         Log In
                     </button>
                     <span className="text-white">
