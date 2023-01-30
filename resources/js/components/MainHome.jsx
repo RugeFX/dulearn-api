@@ -20,7 +20,11 @@ const MainHome = (props) => {
         <main className="h-screen bg-[#070B30] mt-20">
             <div className="text-white">
                 {materials.map((mat) => (
-                    <MaterialBox title={mat.title} desc={mat.material} />
+                    <MaterialBox
+                        key={mat.id}
+                        title={mat.title}
+                        desc={mat.material}
+                    />
                 ))}
             </div>
         </main>

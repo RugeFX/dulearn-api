@@ -7,39 +7,41 @@ import axios from "axios";
 
 import "./../../css/shake.css";
 
-export default function Login(props) {
+export default function Register(props) {
     const [nisn, setNisn] = useState("");
     const [password, setPassword] = useState("");
+    const [conf, setConf] = useState("");
     const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
-    const [focusNisn, setFocusNisn] = useState(false);
-    const [focusPass, setFocusPass] = useState(false);
 
-    const handleLogin = () => {
+    const handleRegister = () => {
         setLoading(true);
-        axios.get("/sanctum/csrf-cookie").then((res) => {
-            axios
-                .post("/login", { reg_num: nisn, password: password })
-                .then((res) => {
-                    setLoading(false);
-                    console.log(res);
-                    if (res.data.success === "Success") {
-                        setTimeout(() => {
-                            window.location.href = "/home";
-                        }, 600);
-                    }
-                })
-                .catch((err) => {
-                    setLoading(false);
-                    const errResponse = err.response.data;
-                    setError(errResponse.data);
-                    console.error(errResponse);
-                });
-        });
+        if (password !== conf) {
+            setError(["Password doesn't match!"]);
+            setLoading(false);
+            return;
+        }
+        axios
+            .post("/register", { reg_num: nisn, password: password })
+            .then((res) => {
+                setLoading(false);
+                console.log(res);
+                if (res.data.success === "Success") {
+                    setTimeout(() => {
+                        window.location.href = "/home";
+                    }, 600);
+                }
+            })
+            .catch((err) => {
+                setLoading(false);
+                const errResponse = err.response.data;
+                setError(errResponse.data);
+                console.error(errResponse);
+            });
     };
     return (
         <>
-            <Head title="Login"></Head>
+            <Head title="Register"></Head>
             <div
                 className={
                     "bg-[#070B30] h-screen flex items-center justify-center"
@@ -53,27 +55,22 @@ export default function Login(props) {
                 <div className="min-w-[25rem] min-h-[15rem] lg:min-w-[40rem] lg:min-h-[30rem] bg-[#060D47] rounded-[70px] shadow-cum flex flex-col justify-center items-center gap-2 lg:gap-5 p-10">
                     <img src={logo} alt="Logo DuLearn" className="w-96" />
                     <div className="flex flex-col gap-5 w-[25rem]">
-                        <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
+                        <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-x-2 divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
                             <FaUser color="#FAA41A" className="m-4" />
                             <input
                                 type="text"
                                 name="nisn"
                                 id="nisn"
-                                className={`w-full px-3 pt-5 pb-2 border-l-2 bg-[#464A83] rounded-r-lg text-white outline-none ${
-                                    error.reg_num != null || error.all != null
-                                        ? "text-red-600"
-                                        : ""
-                                } ${
-                                    !focusNisn && "pb-3.5 pt-3.5"
-                                } transition-all`}
+                                placeholder="Masukkan NISN"
+                                className={`w-full p-3 bg-[#464A83] rounded-r-lg text-white outline-none transition-colors duration-300 ${
+                                    error.length !== 0 ? "text-red-600" : ""
+                                }`}
                                 onFocus={(e) => {
-                                    setFocusNisn(true);
                                     e.target.parentElement.style.scale = "105%";
                                     e.target.parentElement.style.boxShadow =
                                         "0 0 0 3px #FAA41A";
                                 }}
                                 onBlur={(e) => {
-                                    setFocusNisn(false);
                                     e.target.parentElement.style.scale = "100%";
                                     e.target.parentElement.style.boxShadow =
                                         "0 0 0 0 #FAA41A";
@@ -82,43 +79,26 @@ export default function Login(props) {
                                     setNisn(e.target.value);
                                 }}
                                 onKeyDown={(e) => {
-                                    if (e.code === "Enter") handleLogin();
+                                    if (e.code === "Enter") handleRegister();
                                 }}
                             />
-                            <span
-                                className={`absolute text-white translate-x-16 pointer-events-none ${
-                                    nisn && !focusNisn
-                                        ? "opacity-0"
-                                        : "opacity-50"
-                                } ${
-                                    focusNisn &&
-                                    "-translate-y-4 translate-x-14 scale-75 opacity-100"
-                                } transition-all`}
-                            >
-                                NISN
-                            </span>
                         </div>
-                        <div className="inline-flex items-center bg-[#1c215c] rounded-lg shadow-none shadow-[#FAA41A] transition-all">
+                        <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-x-2 divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
                             <FaLock color="#FAA41A" className="m-4" />
                             <input
                                 type="password"
                                 name="pass"
                                 id="pass"
-                                className={`w-full px-3 pt-5 pb-2 border-l-2 bg-[#464A83] rounded-r-lg text-white outline-none ${
-                                    (error.password != null ||
-                                        error.all != null) &&
-                                    "text-red-600"
-                                } ${
-                                    !focusPass && "pb-3.5 pt-3.5"
-                                } transition-all`}
+                                placeholder="Masukkan Password"
+                                className={`w-full p-3 bg-[#464A83] rounded-r-lg text-white outline-none transition-colors duration-300 ${
+                                    error.length !== 0 ? "text-red-600" : ""
+                                }`}
                                 onFocus={(e) => {
-                                    setFocusPass(true);
                                     e.target.parentElement.style.scale = "105%";
                                     e.target.parentElement.style.boxShadow =
                                         "0 0 0 3px #FAA41A";
                                 }}
                                 onBlur={(e) => {
-                                    setFocusPass(false);
                                     e.target.parentElement.style.scale = "100%";
                                     e.target.parentElement.style.boxShadow =
                                         "0 0 0 0 #FAA41A";
@@ -127,27 +107,43 @@ export default function Login(props) {
                                     setPassword(e.target.value);
                                 }}
                                 onKeyDown={(e) => {
-                                    if (e.code === "Enter") handleLogin();
+                                    if (e.code === "Enter") handleRegister();
                                 }}
                             />
-                            <span
-                                className={`absolute text-white translate-x-16 pointer-events-none ${
-                                    password && !focusPass
-                                        ? "opacity-0"
-                                        : "opacity-50"
-                                } ${
-                                    focusPass &&
-                                    "-translate-y-4 translate-x-[3.20rem] scale-75 opacity-100"
-                                } transition-all`}
-                            >
-                                Password
-                            </span>
+                        </div>
+                        <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-x-2 divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
+                            <FaLock color="#FAA41A" className="m-4" />
+                            <input
+                                type="password"
+                                name="passconf"
+                                id="passconf"
+                                placeholder="Konfirmasi Password"
+                                className={`w-full p-3 bg-[#464A83] rounded-r-lg text-white outline-none transition-colors duration-300 ${
+                                    error.length !== 0 ? "text-red-600" : ""
+                                }`}
+                                onFocus={(e) => {
+                                    e.target.parentElement.style.scale = "105%";
+                                    e.target.parentElement.style.boxShadow =
+                                        "0 0 0 3px #FAA41A";
+                                }}
+                                onBlur={(e) => {
+                                    e.target.parentElement.style.scale = "100%";
+                                    e.target.parentElement.style.boxShadow =
+                                        "0 0 0 0 #FAA41A";
+                                }}
+                                onChange={(e) => {
+                                    setConf(e.target.value);
+                                }}
+                                onKeyDown={(e) => {
+                                    if (e.code === "Enter") handleRegister();
+                                }}
+                            />
                         </div>
                     </div>
                     <div className="text-red-600 font-bold text-center overflow-hidden animate-pulse">
                         {Object.keys(error).length !== 0 && (
                             <ul>
-                                {Object.values(error).map((msg, i) => (
+                                {error.map((msg, i) => (
                                     <li
                                         style={{
                                             animation: "shake 150ms 2 linear",
@@ -161,7 +157,7 @@ export default function Login(props) {
                         )}
                     </div>
                     <button
-                        onClick={handleLogin}
+                        onClick={handleRegister}
                         className={`flex items-center gap-4 text-lg font-bold text-[#1c215c] bg-[#FAA41A] hover:bg-[#ffb949] rounded-lg px-5 py-2 focus:outline-0 focus:shadow-input focus:shadow-white transition-all hover:scale-110`}
                     >
                         {loading && (
@@ -170,15 +166,12 @@ export default function Login(props) {
                                 color="white"
                             />
                         )}
-                        Log In
+                        Buat Akun
                     </button>
                     <span className="text-white">
-                        Tidak punya akun?{" "}
-                        <a
-                            href="/register"
-                            className="text-[#FAA41A] font-bold"
-                        >
-                            Buat akun disini!
+                        Sudah mempunyai akun?{" "}
+                        <a href="/login" className="text-[#FAA41A] font-bold">
+                            Masuk disini!
                         </a>
                     </span>
                 </div>
