@@ -5,6 +5,8 @@
 /storage/*.key
 /vendor
 .env
+.envSERVER
+.envLOCAL
 .env.backup
 .env.production
 .phpunit.result.cache
@@ -13,6 +15,7 @@ Homestead.yaml
 auth.json
 npm-debug.log
 yarn-error.log
+indexserver.php
 /.fleet
 /.idea
 /.vscode
