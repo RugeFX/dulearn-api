@@ -1,5 +1,6 @@
-import Navbar from "../components/Navbar";
-import MainHome from "../components/MainHome";
+import React from "react";
+import Navbar from "../Components/Navbar";
+import MainHome from "../Components/MainHome";
 import { Head } from "@inertiajs/react";
 
 export default function Home(props) {
