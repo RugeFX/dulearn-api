@@ -41,14 +41,14 @@ class MaterialController extends Controller
         $validate = Validator::make($request->all(), [
             'class_id' => 'required|unique:App\Models\Class,id',
             'subject_id' => 'required|unique:App\Models\Subject,id',
-            'title' => 'required', 
+            'title' => 'required',
             'material' => 'required',
         ]);
 
         // Cek Validasi
         if ($validate->fails()) {
             $errorMessages = $validate->messages()->all();
-            return new ResponseResource('Failed', 'Validation Error!', $errorMessages);
+            return response()->json(new ResponseResource('Failed', 'Validation Error!', $errorMessages),400);
         }
 
         // Make a model and make a save transaction
@@ -59,12 +59,12 @@ class MaterialController extends Controller
         $matSave->title = $request->title;
         $matSave->material = $request->material;
         $matSave->created_at = date('Y-m-d');
-        
+
         try{
             $matSave->saveOrFail();
-            return new ResponseResource('Success', 'Successfully inserted data!', $matSave);
+            return response()->json(new ResponseResource('Success', 'Successfully inserted data!', $matSave), 200);
         }catch(Throwable $err){
-            return new ResponseResource('Failed', 'Error on inserting data', $err->getMessage());
+            return response()->json(new ResponseResource('Failed', 'Error on inserting data', $err->getMessage(), 400));
         }
     }
 
@@ -79,9 +79,9 @@ class MaterialController extends Controller
         // Cari materi berdasarkan ID
         $mat = Material::find($id);
         if(!$mat){
-            return new ResponseResource('Failed', 'No Data Found', null);
+            return response()->json(new ResponseResource('Failed', 'No Data Found', null), 404);
         }
-        return new ResponseResource('Success', 'Material Data', new MaterialResource($mat));
+        return response()->json(new ResponseResource('Success', 'Material Data', new MaterialResource($mat), 200));
     }
 
     /**
