@@ -49,17 +49,23 @@ export default function Register(props) {
     }, []);
 
     const getPhoneNumberByNISN = async (reg) => {
-        const res = await axios.post("/api/auth/reginfo", {
-            reg_num: reg,
-        });
-        const { phone_num } = res.data.data;
-        if (res.data.data.is_used === 1) {
-            setError({ reg_num: ["NISN Telah Dipakai!"] });
+        try {
+            const res = await axios.post("/api/auth/reginfo", {
+                reg_num: reg,
+            });
+            const { phone_num } = res.data.data;
+            if (res.data.data.is_used === 1) {
+                setError({ reg_num: ["NISN Telah Dipakai!"] });
+                setLoading(false);
+                return null;
+            }
+            setError({});
+            return phone_num;
+        } catch (err) {
+            setError({ reg_num: ["NISN Tidak Ditemukan / Tidak Valid!"] });
             setLoading(false);
             return null;
         }
-        setError({});
-        return phone_num;
     };
 
     const handleLogin = async () => {
@@ -68,11 +74,13 @@ export default function Register(props) {
         if (!phoneNumber) return;
         signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
             .then((result) => {
+                console.log(result);
                 window.confirmationResult = result;
                 setVerificationDone("done");
                 setLoading(false);
             })
             .catch((err) => {
+                setError({ reg_num: ["NISN Not Found"] });
                 console.error(err);
                 setLoading(false);
             });
@@ -90,7 +98,7 @@ export default function Register(props) {
             })
             .catch((error) => {
                 console.log(error);
-                setError({ otp: "Kode OTP Salah!" });
+                setError({ otp: ["Kode OTP Salah!"] });
                 setLoading(false);
             });
     };
