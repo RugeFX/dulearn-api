@@ -50,11 +50,15 @@ export default function Register(props) {
 
     const getPhoneNumberByNISN = async (reg) => {
         try {
-            const res = await axios.post("/api/auth/reginfo", {
-                reg_num: reg,
-            });
+            const res = await axios.post(
+                "https://dulearn.rugefx.com/api/auth/reginfo",
+                {
+                    reg_num: reg,
+                }
+            );
             const { phone_num } = res.data.data;
-            if (res.data.data.is_used === 1) {
+            console.log(res.data);
+            if (res.data.data.is_used === "1") {
                 setError({ reg_num: ["NISN Telah Dipakai!"] });
                 setLoading(false);
                 return null;
