@@ -17,9 +17,7 @@ const Navbar = () => {
                         axios
                             .get("/logout")
                             .then((res) => {
-                                if (res.statusText === "OK") {
-                                    window.location.href = "/login";
-                                }
+                                window.location.href = "/login";
                             })
                             .catch((err) => console.error(err));
                     }}
