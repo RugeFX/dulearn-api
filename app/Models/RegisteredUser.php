@@ -14,7 +14,7 @@ class RegisteredUser extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'class_id', 'reg_num', 'name', 'is_used', 'created_at',
+        'class_id', 'reg_num', 'phone_num', 'name', 'is_used', 'created_at',
     ];
 
     public function kelas(){

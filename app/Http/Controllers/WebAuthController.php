@@ -23,15 +23,11 @@ class WebAuthController extends Controller
 
         // Cek Validasi
         if ($validate->fails()) {
-            $errorMessages = $validate->messages()->toJson();
+            $errorMessages = $validate->messages();
             return response()->json(new ResponseResource('Failed', 'Validation Error!', $errorMessages), 400);
         }
 
-        // Cek if registration ID exists
         $regCheck = RegisteredUser::query()->where('reg_num', '=', $request->reg_num)->first();
-        if(!$regCheck){
-            return response()->json(new ResponseResource('Failed', 'NISN/NIP not found!', ["reg_num" => 'NISN/NIP not found!']), 404);
-        }
         // Cek if registratin ID is used
         if($regCheck->is_used == 1){
             return response()->json(new ResponseResource('Failed', 'User already exists', ["all" => 'User already exists']), 409);
@@ -51,9 +47,6 @@ class WebAuthController extends Controller
             // Update is_used field to 1 indicationg that the NIS is used
             $regCheck->is_used = 1;
             $regCheck->update();
-
-            // Logs in the user
-            $request->session()->regenerate();
 
             return response()->json(new ResponseResource('Success', 'Successfully registered user!', $userSave), 200);
         }catch(Throwable $err){

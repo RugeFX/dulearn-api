@@ -19,6 +19,9 @@ use Inertia\Inertia;
 */
 
 Route::middleware('guest')->group(function (){
+    Route::get('/', function(){
+        return Inertia::render("Landing");
+    });
     Route::get("/login", function() {
         return Inertia::render("Login");
     })->name("login");

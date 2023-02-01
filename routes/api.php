@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('materials', MaterialController::class);
 });
 Route::prefix('auth')->group(function () {
+    Route::post('/reginfo', [AuthController::class, 'regInfo']);
     Route::post("/register", [AuthController::class, 'registerUser']);
     Route::post("/login", [AuthController::class, 'loginUser']);
     Route::get("/logout", [AuthController::class, 'logOutUser']);

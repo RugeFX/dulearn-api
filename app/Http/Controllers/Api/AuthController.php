@@ -83,4 +83,12 @@ class AuthController extends Controller
         $user->tokens()->delete();
         return response()->json(new ResponseResource("Success", "Logged Out Successfully!", null), 200);
     }
+
+    public function regInfo(Request $request){
+        $user = RegisteredUser::where('reg_num', $request->reg_num)->first();
+        if(!$user){
+            return response()->json(new ResponseResource('Failed', 'NISN Not Found!', null), 404);
+        }
+        return response()->json(new ResponseResource('Success', 'NISN Info', $user), 200);
+    }
 }
