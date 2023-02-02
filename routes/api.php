@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,7 @@ Route::prefix('auth')->group(function () {
     Route::post("/login", [AuthController::class, 'loginUser']);
     Route::get("/logout", [AuthController::class, 'logOutUser']);
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-        return $request->user();
+        $res = User::with(['level','registeredUser'])->where('id', $request->user()->id)->first();
+        return $res;
     });
 });

@@ -33,6 +33,14 @@ Route::middleware('guest')->group(function (){
 });
 Route::get('/logout', [WebAuthController::class, 'logOut']);
 
-Route::middleware("auth:sanctum")->get('/home', function () {
-    return Inertia::render("Home");
+Route::middleware("auth")->group(function () {
+    Route::get('/home', function () {
+        return Inertia::render("Home");
+    });
+    Route::get('/materi', function () {
+        return Inertia::render("MateriSementara");
+    });
+    Route::get('/profile', function () {
+        return Inertia::render("Profile");
+    });
 });

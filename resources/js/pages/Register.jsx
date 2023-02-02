@@ -3,6 +3,8 @@ import logo from "/public/img/logoglow.png";
 import bg from "/public/img/login-bg.png";
 import { FaUser, FaLock, FaCircleNotch } from "react-icons/fa";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+
 import axios from "axios";
 
 // Firebase Imports
@@ -17,6 +19,8 @@ import { firebaseConfig } from "../Auth";
 import "./../../css/shake.css";
 
 export default function Register(props) {
+    console.log(import.meta.env.VITE_BASE_URL);
+    const client = axios.create({ baseURL: import.meta.env.VITE_BASE_URL });
     // Input Field States
     const [nisn, setNisn] = useState("");
     const [password, setPassword] = useState("");
@@ -50,20 +54,17 @@ export default function Register(props) {
 
     const getPhoneNumberByNISN = async (reg) => {
         try {
-            const res = await axios.post(
-                "https://dulearn.rugefx.com/api/auth/reginfo",
-                {
-                    reg_num: reg,
-                }
-            );
-            const { phone_num } = res.data.data;
+            const res = await client.post("/api/auth/reginfo", {
+                reg_num: reg,
+            });
             console.log(res.data);
-            if (res.data.data.is_used === "1") {
+            if (res.data.data.is_used === "1" || res.data.data.is_used === 1) {
                 setError({ reg_num: ["NISN Telah Dipakai!"] });
                 setLoading(false);
                 return null;
             }
             setError({});
+            const { phone_num } = res.data.data;
             return phone_num;
         } catch (err) {
             setError({ reg_num: ["NISN Tidak Ditemukan / Tidak Valid!"] });
@@ -98,6 +99,7 @@ export default function Register(props) {
             .then((result) => {
                 console.log(result);
                 setVerificationDone("after");
+                setError({});
                 setLoading(false);
             })
             .catch((error) => {
@@ -114,7 +116,7 @@ export default function Register(props) {
             setError({ password: ["Password Tidak Cocok!"] });
             return;
         }
-        axios
+        client
             .post("/register", {
                 reg_num: nisn,
                 password: password,
@@ -147,7 +149,13 @@ export default function Register(props) {
                 <div className="min-w-[25rem] min-h-[15rem] lg:min-w-[40rem] lg:min-h-[30rem] bg-[#060D47] rounded-[70px] shadow-cum flex flex-col justify-center items-center gap-2 lg:gap-5 p-10">
                     <img src={logo} alt="Logo DuLearn" className="w-96" />
                     {verificationDone === "done" ? (
-                        <div className="flex flex-col gap-5 w-[25rem]">
+                        <motion.div
+                            key={verificationDone}
+                            initial={{ opacity: 0, translateX: -10 }}
+                            animate={{ opacity: 1, translateX: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="flex flex-col gap-5 w-[25rem]"
+                        >
                             <span className="text-white text-sm">
                                 Tolong masukkan kode OTP yang telah dikirim ke
                                 nomor telepon anda
@@ -198,9 +206,15 @@ export default function Register(props) {
                                     OTP Code
                                 </span>
                             </div>
-                        </div>
+                        </motion.div>
                     ) : verificationDone === "no" ? (
-                        <div className="flex flex-col gap-5 w-[25rem]">
+                        <motion.div
+                            key={verificationDone}
+                            initial={{ opacity: 0, translateY: 10 }}
+                            animate={{ opacity: 1, translateY: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="flex flex-col gap-5 w-[25rem]"
+                        >
                             <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
                                 <FaUser color="#FAA41A" className="m-4" />
                                 <input
@@ -249,10 +263,16 @@ export default function Register(props) {
                                     NISN
                                 </span>
                             </div>
-                        </div>
+                        </motion.div>
                     ) : (
                         verificationDone === "after" && (
-                            <div className="flex flex-col gap-5 w-[25rem]">
+                            <motion.div
+                                key={verificationDone}
+                                initial={{ opacity: 0, translateX: -10 }}
+                                animate={{ opacity: 1, translateX: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="flex flex-col gap-5 w-[25rem]"
+                            >
                                 <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
                                     <FaLock color="#FAA41A" className="m-4" />
                                     <input
@@ -352,7 +372,7 @@ export default function Register(props) {
                                         Confirm Password
                                     </span>
                                 </div>
-                            </div>
+                            </motion.div>
                         )
                     )}
 

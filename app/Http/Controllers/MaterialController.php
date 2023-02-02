@@ -20,7 +20,7 @@ class MaterialController extends Controller
     public function index()
     {
         //
-        $materials = Material::all();
+        $materials = Material::with(['subject', 'user'])->get();
         return response()->json(new ResponseResource("Success", "Data Materials", $materials), 200);
     }
 

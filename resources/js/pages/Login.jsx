@@ -1,9 +1,10 @@
-import { Head, router } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import logo from "/public/img/logoglow.png";
 import bg from "/public/img/login-bg.png";
 import { FaUser, FaLock, FaCircleNotch } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 import "./../../css/shake.css";
 
@@ -24,9 +25,7 @@ export default function Login(props) {
                     setLoading(false);
                     console.log(res);
                     if (res.data.success === "Success") {
-                        setTimeout(() => {
-                            window.location.href = "/home";
-                        }, 600);
+                        window.location.href = "/home";
                     }
                 })
                 .catch((err) => {
@@ -52,7 +51,12 @@ export default function Login(props) {
             >
                 <div className="min-w-[25rem] min-h-[15rem] lg:min-w-[40rem] lg:min-h-[30rem] bg-[#060D47] rounded-[70px] shadow-cum flex flex-col justify-center items-center gap-2 lg:gap-5 p-10">
                     <img src={logo} alt="Logo DuLearn" className="w-96" />
-                    <div className="flex flex-col gap-5 w-[25rem]">
+                    <motion.div
+                        initial={{ opacity: 0, translateY: 10 }}
+                        animate={{ opacity: 1, translateY: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="flex flex-col gap-5 w-[25rem]"
+                    >
                         <div className="inline-flex items-center bg-[#1c215c] rounded-lg divide-gray-300 shadow-none shadow-[#FAA41A] transition-all">
                             <FaUser color="#FAA41A" className="m-4" />
                             <input
@@ -143,7 +147,7 @@ export default function Login(props) {
                                 Password
                             </span>
                         </div>
-                    </div>
+                    </motion.div>
                     <div className="text-red-600 font-bold text-center overflow-hidden animate-pulse">
                         {Object.keys(error).length !== 0 && (
                             <ul>

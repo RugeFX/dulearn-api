@@ -7,4 +7,25 @@
     html {
         font-family: "Inter", sans-serif;
     }
+    /* width */
+    ::-webkit-scrollbar {
+        width: 7px;
+        height: 7px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #111436;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #464a83;
+        border-radius: 20px;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #3a3f83;
+    }
 }

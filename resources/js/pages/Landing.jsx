@@ -24,9 +24,13 @@ const Landing = () => {
                             alt="DuLearn Logo"
                             className="w-96 h-fit"
                         />
-                        <span className="text-lg text-white">
-                            Dupat Learning App
+                        <span className="text-lg text-white font-bold">
+                            Welcome to DuLearn! 👋
                         </span>
+                        <p className="text-sm text-white font-thin">
+                            Please sign-in or create an account to start your
+                            adventure
+                        </p>
                     </div>
                     <div className="w-80 mb-11">
                         <button
