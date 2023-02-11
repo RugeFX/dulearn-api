@@ -22,7 +22,6 @@
         "@inertiajs/inertia-react": "^0.8.1",
         "@inertiajs/progress": "^0.2.7",
         "@inertiajs/react": "^1.0.0",
-        "@react-spring/web": "^9.6.1",
         "@vitejs/plugin-react": "^3.0.1",
         "dotenv": "^16.0.3",
         "firebase": "^9.16.0",

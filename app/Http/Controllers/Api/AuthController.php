@@ -32,9 +32,12 @@ class AuthController extends Controller
             return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["Invalid Login Details!"]), 401);
         }
 
-        $user = User::query()->where("reg_num", '=', $request->reg_num)->first();
+        $user = User::query()->where("reg_num", $request->reg_num)->first();
 
-        return response()->json(new ResponseResource("Success", "Login Success!", $user->createToken("APITOKEN", ['read-data', 'modify-data'])->plainTextToken), 200);
+        if($user->level_id == 2){
+            return response()->json(new ResponseResource("Success", "Login Success!", $user->createToken("APITOKEN", ['read-data', 'modify-all'])->plainTextToken), 200);
+        }
+        return response()->json(new ResponseResource("Success", "Login Success!", $user->createToken("APITOKEN", ['read-data', 'modify-self-post'])->plainTextToken), 200);
     }
 
     public function registerUser(Request $request){
