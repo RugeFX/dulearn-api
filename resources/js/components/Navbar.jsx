@@ -4,7 +4,7 @@ import defpp from "/public/storage/img/profile/default.png";
 import { useEffect, useRef, useState } from "react";
 import { FaPowerOff } from "react-icons/fa";
 
-function useOutsideAlerter(ref, set, state) {
+function useOutsideAlerter(ref, set) {
     useEffect(() => {
         function handleClickOutside(event) {
             if (ref.current && !ref.current.contains(event.target)) {
@@ -21,7 +21,7 @@ function useOutsideAlerter(ref, set, state) {
     }, [ref]);
 }
 
-const Navbar = (props) => {
+const Navbar = ({ name, profpic }) => {
     const [toggleUser, setToggleUser] = useState(false);
     const [userInfo, setUserInfo] = useState({});
     const wrapperRef = useRef(null);
