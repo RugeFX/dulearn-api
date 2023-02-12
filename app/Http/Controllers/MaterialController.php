@@ -94,6 +94,10 @@ class MaterialController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $mat = Material::find($id);
+        if($request->user()->id == $mat->user_id){
+            
+        }
     }
 
     /**
