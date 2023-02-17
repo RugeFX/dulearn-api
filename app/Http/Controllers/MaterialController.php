@@ -77,7 +77,7 @@ class MaterialController extends Controller
     public function show($id)
     {
         // Cari materi berdasarkan ID
-        $mat = Material::find($id);
+        $mat = Material::query()->with(['kelas', 'subject', 'user'])->find($id);
         if(!$mat){
             return response()->json(new ResponseResource('Failed', 'No Data Found', null), 404);
         }
@@ -95,8 +95,8 @@ class MaterialController extends Controller
     {
         //
         $mat = Material::find($id);
-        if($request->user()->id == $mat->user_id){
-            
+        if(!$request->user()->id == $mat->user_id){
+            return response()->json(new ResponseResource("Failed", "Anda bukan pemilik materi ini", null), 400);
         }
     }
 
@@ -106,8 +106,13 @@ class MaterialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
+        $mat = Material::find($id);
+        if($request->user()->id == $mat->user->id){
+            $mat->delete();
+            return response()->json(new ResponseResource("Success", "Berhasil menghapus materi!", null), 200);
+        }
     }
 }
