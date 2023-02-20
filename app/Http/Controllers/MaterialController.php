@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\MaterialResource;
 use App\Http\Resources\ResponseResource;
 use App\Models\Material;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rules\Password;
 use Throwable;
 
 class MaterialController extends Controller
@@ -81,7 +79,7 @@ class MaterialController extends Controller
         if(!$mat){
             return response()->json(new ResponseResource('Failed', 'No Data Found', null), 404);
         }
-        return response()->json(new ResponseResource('Success', 'Material Data', new MaterialResource($mat), 200));
+        return response()->json(new ResponseResource('Success', 'Material Data', $mat, 200));
     }
 
     /**
@@ -94,9 +92,23 @@ class MaterialController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $mat = Material::find($id);
-        if(!$request->user()->id == $mat->user_id){
-            return response()->json(new ResponseResource("Failed", "Anda bukan pemilik materi ini", null), 400);
+        $mat = Material::query()->find($id);
+        if($request->user()->id != $mat->user_id){
+            return response()->json(new ResponseResource("Failed", "You are not the owner of this material!", null), 400);
+        }
+
+        // TODO : Update logic
+        try{
+            $upd = $mat->updateOrFail($request->only([
+                'class_id', 'subject_id', 'title', 'material',
+            ]));
+            if (!$upd) {
+                return response()->json(new ResponseResource("Failed", "Update failed!", null), 400);
+            }
+            return response()->json(new ResponseResource("Success", "Update successful!", $mat), 200);
+        }
+        catch(Throwable $ex){
+            return response()->json(new ResponseResource("Failed", "Update failed!", $ex->getMessage()), 400);
         }
     }
 

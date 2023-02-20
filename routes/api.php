@@ -30,6 +30,7 @@ Route::prefix('auth')->group(function () {
     Route::get("/logout", [AuthController::class, 'logOutUser']);
     Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         $res = User::with(['level','registeredUser'])->where('id', $request->user()->id)->first();
+        // $res = $request->user()->id;
         return $res;
     });
     Route::prefix("web")->group(function () {

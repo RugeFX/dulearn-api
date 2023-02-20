@@ -66,7 +66,7 @@ class WebAuthController extends Controller
         }
 
         if(!Auth::attempt($request->only("reg_num", "password"))){
-            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["all" => "Invalid Login Details!"]), 401);
+            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["all" => "Invalid Login Details!"]), 400);
         }
 
         $request->session()->regenerate();

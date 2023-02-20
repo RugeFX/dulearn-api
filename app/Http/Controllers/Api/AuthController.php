@@ -20,7 +20,7 @@ class AuthController extends Controller
 
         $validate = Validator::make($request->all(), [
             "reg_num" => 'required',
-            'password' => ['required', Password::min(8)],
+            'password' => ['required'],
         ]);
 
         if($validate->fails()){
@@ -29,7 +29,7 @@ class AuthController extends Controller
         }
 
         if(!Auth::attempt($request->only("reg_num", "password"))){
-            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["Invalid Login Details!"]), 401);
+            return response()->json(new ResponseResource("Failed", "Invalid Login Details!", ["Invalid Login Details!"]), 400);
         }
 
         $user = User::query()->where("reg_num", $request->reg_num)->first();
