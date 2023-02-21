@@ -127,4 +127,11 @@ class MaterialController extends Controller
             return response()->json(new ResponseResource("Success", "Berhasil menghapus materi!", null), 200);
         }
     }
+
+    public function owned(Request $request)
+    {
+        //
+        $materials = Material::with(['subject', 'user'])->where('user_id', '=', $request->user()->id)->get();
+        return response()->json(new ResponseResource("Success", "Data Materials", $materials), 200);
+    }
 }

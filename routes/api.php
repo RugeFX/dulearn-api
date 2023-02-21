@@ -22,6 +22,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('materials', MaterialController::class);
+    Route::get('/me/materials', [MaterialController::class, 'owned']);
+    Route::get('/me', function (Request $request) {
+        $res = User::with(['level','registeredUser'])->where('id', $request->user()->id)->first();
+        // $res = $request->user()->id;
+        return $res;
+    });
 });
 Route::prefix('auth')->group(function () {
     Route::post('/reginfo', [AuthController::class, 'regInfo']);
