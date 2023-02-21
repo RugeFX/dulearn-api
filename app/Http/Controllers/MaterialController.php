@@ -31,14 +31,14 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
         // Cek autorisasi
-        if(!$request->user()->tokenCan("modify-data")){
+        if(!$request->user()->level_id == 2){
             return response()->json(new ResponseResource("Failed", 'Unauthorized', null), 401);
         }
 
         // Membuat Validator
         $validate = Validator::make($request->all(), [
-            'class_id' => 'required|unique:App\Models\Class,id',
-            'subject_id' => 'required|unique:App\Models\Subject,id',
+            'class_id' => 'required',
+            'subject_id' => 'required',
             'title' => 'required',
             'material' => 'required',
         ]);
