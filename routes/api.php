@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebAuthController;
 use App\Models\User;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('materials', MaterialController::class);
+    Route::apiResource('posts', PostController::class);
     Route::get('/me/materials', [MaterialController::class, 'owned']);
     Route::get('/me', function (Request $request) {
         $res = User::with(['level','registeredUser'])->where('id', $request->user()->id)->first();
