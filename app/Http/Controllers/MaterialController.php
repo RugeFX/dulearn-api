@@ -18,7 +18,7 @@ class MaterialController extends Controller
     public function index()
     {
         //
-        $materials = Material::with(['subject', 'user'])->get();
+        $materials = Material::with(['kelas','subject', 'user'])->get();
         return response()->json(new ResponseResource("Success", "Data Materials", $materials), 200);
     }
 
@@ -75,7 +75,7 @@ class MaterialController extends Controller
     public function show($id)
     {
         // Cari materi berdasarkan ID
-        $mat = Material::query()->with(['kelas', 'subject', 'user'])->find($id);
+        $mat = Material::query()->with(['kelas', 'subject', 'user', 'posts'])->find($id);
         if(!$mat){
             return response()->json(new ResponseResource('Failed', 'No Data Found', null), 404);
         }
@@ -93,11 +93,15 @@ class MaterialController extends Controller
     {
         //
         $mat = Material::query()->find($id);
+
+        if(!$mat) {
+            return response()->json(new ResponseResource("Failed", "This material doesn't exists!", null), 404);
+        }
+
         if($request->user()->id != $mat->user_id){
             return response()->json(new ResponseResource("Failed", "You are not the owner of this material!", null), 400);
         }
 
-        // TODO : Update logic
         try{
             $upd = $mat->updateOrFail($request->only([
                 'class_id', 'subject_id', 'title', 'material',
@@ -131,7 +135,10 @@ class MaterialController extends Controller
     public function owned(Request $request)
     {
         //
-        $materials = Material::with(['subject', 'user'])->where('user_id', '=', $request->user()->id)->get();
+        $materials = Material::with(['kelas' ,'subject', 'user', 'posts'])->where('user_id', '=', $request->user()->id)->get();
+        if(count($materials) < 1){
+            return response()->json(new ResponseResource('Failed', 'No Data Found', null), 404);
+        }
         return response()->json(new ResponseResource("Success", "Data Materials", $materials), 200);
     }
 }

@@ -48,6 +48,10 @@ class User extends Authenticatable
         return $this->hasMany(Reply::class);
     }
 
+    public function koleksi(){
+        return $this->hasMany(Koleksi::class);
+    }
+
     public static function boot(){
         parent::boot();
         self::deleting(function($user) {
