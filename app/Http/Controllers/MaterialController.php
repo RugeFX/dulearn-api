@@ -15,10 +15,34 @@ class MaterialController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $materials = Material::with(['kelas','subject', 'user'])->get();
+        $materials = Material::with(['kelas','subject', 'user']);
+
+        $searchQuery = $request->query('search');
+        $filterQuery = $request->query('filter');
+
+        if ($searchQuery && $filterQuery) {
+            // Search dan filter ada
+            $materials = $materials->where(function ($query) use ($searchQuery) {
+                 $query->where('title', 'like', "%{$searchQuery}%")
+                    ->orWhere('material', 'like', "%{$searchQuery}%");
+                })->where('subject_id', $filterQuery);
+        } elseif ($searchQuery) {
+            // Hanya search
+            $materials = $materials->where('title', 'like', "%{$searchQuery}%")
+                                ->orWhere('material', 'like', "%{$searchQuery}%");
+        } elseif ($filterQuery) {
+            // Hanya filter
+            $materials = $materials->where('subject_id', $filterQuery);
+        }
+
+        $materials = $materials->get();
+
+        if ($materials->isEmpty()) {
+            return response()->json(new ResponseResource("Failed", "No matching records found", null), 404);
+        }
         return response()->json(new ResponseResource("Success", "Data Materials", $materials), 200);
     }
 
