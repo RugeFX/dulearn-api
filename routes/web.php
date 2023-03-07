@@ -19,28 +19,19 @@ use Inertia\Inertia;
 */
 
 Route::middleware('guest')->group(function (){
-    Route::get('/', function(){
-        return Inertia::render("Landing");
-    });
-    Route::get("/login", function() {
-        return Inertia::render("Login");
-    })->name("login");
-    Route::get("/register", function() {
-        return Inertia::render("Register");
-    });
     Route::post('/login', [WebAuthController::class, 'logIn']);
     Route::post('/register', [WebAuthController::class, 'registerUser']);
 });
 Route::get('/logout', [WebAuthController::class, 'logOut']);
 
-Route::middleware("auth")->group(function () {
-    Route::get('/home', function () {
-        return Inertia::render("Home");
-    });
-    Route::get('/materi', function () {
-        return Inertia::render("MateriSementara");
-    });
-    Route::get('/profile', function () {
-        return Inertia::render("Profile");
-    });
-});
+// Route::middleware("auth")->group(function () {
+//     Route::get('/home', function () {
+//         return Inertia::render("Home");
+//     });
+//     Route::get('/materi', function () {
+//         return Inertia::render("MateriSementara");
+//     });
+//     Route::get('/profile', function () {
+//         return Inertia::render("Profile");
+//     });
+// });

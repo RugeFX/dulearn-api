@@ -34,4 +34,14 @@ class Material extends Model
     {
         return $this->hasMany('App\Models\Post');
     }
+    public function koleksi()
+    {
+        return $this->hasMany('App\Models\Koleksi');
+    }
+    public function delete()
+    {
+        $this->posts()->delete();
+        $this->koleksi()->delete();
+        return parent::delete();
+    }
 }

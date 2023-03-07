@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+Route::get('/ypga', function() {
+    return Hash::make("akuyoga123");
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('/reginfo', [AuthController::class, 'regInfo']);
     Route::post("/register", [AuthController::class, 'registerUser']);
@@ -59,7 +64,7 @@ Route::prefix('auth')->group(function () {
         // $res = $request->user()->id;
         return $res;
     });
-    Route::prefix("web")->group(function () {
+    Route::prefix("web")->middleware('web')->group(function () {
         Route::middleware('guest')->group(function (){
             Route::post('/login', [WebAuthController::class, 'logIn']);
             Route::post('/register', [WebAuthController::class, 'registerUser']);
