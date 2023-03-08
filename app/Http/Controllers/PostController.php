@@ -21,7 +21,7 @@ class PostController extends Controller
         //
         if($request->query('matid') != null){
             $matid = $request->query('matid');
-            $posts = Post::with(['user', 'material'])->where('material_id', '=', $matid)->get();
+            $posts = Post::with(['user' => fn ($query) => $query->with('registeredUser') , 'material'])->where('material_id', '=', $matid)->get();
             if(count($posts) < 1) {
                 return response()->json(new ResponseResource("Failed", "Posts with material id : ".$matid." doesn't exists!", null), 404);
             }
@@ -48,7 +48,7 @@ class PostController extends Controller
 
         // Cek Validasi
         if ($validate->fails()) {
-            $errorMessages = $validate->messages()->all();
+            $errorMessages = $validate->messages();
             return response()->json(new ResponseResource('Failed', 'Validation Error!', $errorMessages),400);
         }
 
