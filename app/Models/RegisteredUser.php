@@ -18,6 +18,6 @@ class RegisteredUser extends Model
     ];
 
     public function kelas(){
-        return $this->belongsTo("App\Models\Kelas");
+        return $this->belongsTo("App\Models\Kelas", 'class_id', 'id');
     }
 }

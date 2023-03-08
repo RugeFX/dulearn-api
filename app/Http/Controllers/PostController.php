@@ -21,7 +21,7 @@ class PostController extends Controller
         //
         if($request->query('matid') != null){
             $matid = $request->query('matid');
-            $posts = Post::with(['user' => fn ($query) => $query->with('registeredUser') , 'material'])->where('material_id', '=', $matid)->get();
+            $posts = Post::with(['user' => fn ($query) => $query->with(['registeredUser' => fn ($reg) => $reg->with('kelas')]) , 'material'])->where('material_id', '=', $matid)->get();
             if(count($posts) < 1) {
                 return response()->json(new ResponseResource("Failed", "Posts with material id : ".$matid." doesn't exists!", null), 404);
             }

@@ -22,7 +22,7 @@ class ReplyController extends Controller
         //
         if($request->query('postid') != null){
             $postid = $request->query('postid');
-            $replies = Reply::with(['post', 'user' => fn ($query) => $query->with('registeredUser')])->where('post_id', '=', $postid)->get();
+            $replies = Reply::with(['post', 'user' => fn ($query) => $query->with(['registeredUser' => fn ($reg) => $reg->with('kelas')])])->where('post_id', '=', $postid)->get();
             if(count($replies) < 1) {
                 return response()->json(new ResponseResource("Failed", "Replies with post id : ".$postid." doesn't exists!", null), 404);
             }
